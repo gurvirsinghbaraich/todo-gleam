@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home – Todoable</title>
+    <script src="/static/tailwind.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Space Grotesk", monospace;
+      }
+    </style>
+  </head>
+  <body
+    class="w-screen h-screen max-w-screen max-h-screen overflow-hidden bg-stone-800"
+  >
+    <ul
+      id="todo_container"
+      style="margin-top: 25vh; max-height: 55vh"
+      class="max-w-sm mx-auto w-full bg-white overflow-x-hidden overflow-auto rounded p-4"
+    >
+      <form action="/" method="POST" class="mb-3 flex gap-2">
+        <input
+          type="text"
+          name="title"
+          placeholder="Enter Todo"
+          class="rounded w-full border p-3"
+        />
+        <button class="bg-orange-400 p-3 rounded text-white">Save</button>
+      </form>
+      ...todos...
+    </ul>
+
+    <a href="/logout">
+      <div class="absolute bg-rose-500 text-white right-5 bottom-5 rounded p-3">
+        Logout
+      </div>
+    </a>
+
+    <div
+      class="absolute grid place-items-center hidden top-0 right-0 bottom-0 left-0 w-screen h-screen bg-black/90"
+      id="modal"
+    >
+      <div
+        class="max-w-xs bg-white rounded-lg overflow-hidden flex flex-col p-3 gap-2"
+      >
+        <input type="text" id="todo_value" class="p-3 border rounded" />
+        <select id="todo_status" class="w-full p-3 rounded border"></select>
+
+        <div class="flex justify-evenly items-center gap-2 text-white">
+          <button id="cancel_button" class="bg-rose-500 p-3 rounded w-full">
+            Cancel
+          </button>
+          <button
+            id="save_button"
+            class="bg-orange-400 disabled:bg-orange-300 p-3 rounded w-full"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const modal = document.querySelector("#modal");
+      const todo_value = document.querySelector("#todo_value");
+      const todo_status = document.querySelector("#todo_status");
+      const cancel_button = document.querySelector("#cancel_button");
+      const save_button = document.querySelector("#save_button");
+      const todo_container = document.querySelector("#todo_container");
+
+      function toggle(e) {
+        modal.classList.remove("hidden");
+
+        const todo_id = e.getAttribute("data-todo-id");
+        const status = e.getAttribute("data-status");
+
+        todo_value.value = e.innerText;
+        todo_status.innerHTML = `
+          <option value="${status}">${
+          status == "0" ? "Pending" : "Done"
+        }</option>
+          <option value="${status == "0" ? "1" : "0"}"">${
+          status == "1" ? "Pending" : "Done"
+        }</option>
+        `;
+
+        cancel_button.onclick = function () {
+          modal.classList.add("hidden");
+        };
+
+        save_button.onclick = async function () {
+          save_button.innerHTML === "Saving...";
+          save_button.setAttribute("disabled", "true");
+
+          const request = await fetch("/api/edit-todo", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              todo_id: +todo_id,
+              title: todo_value.value,
+              status: +todo_status.value,
+            }),
+          });
+
+          try {
+            const json = await request.json();
+            [...todo_container.querySelectorAll("li > div")].map((child) => {
+              const todo_id = child.getAttribute("data-todo-id");
+
+              if (todo_id == json.todo_id) {
+                child.setAttribute("data-status", json.completed);
+                child.innerHTML = json.title;
+                child.classList.toggle(
+                  "line-through",
+                  json.completed == 0 ? false : true
+                );
+              }
+            });
+          } catch (error) {
+            console.log(error.message);
+          }
+
+          save_button.innerHTML == "Save";
+          save_button.removeAttribute("disabled");
+          modal.classList.add("hidden");
+        };
+      }
+    </script>
+  </body>
+</html>

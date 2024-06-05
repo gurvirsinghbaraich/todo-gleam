@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – Todoable</title>
+
+    <script src="/static/tailwind.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Space Grotesk", monospace;
+      }
+    </style>
+  </head>
+  <body
+    class="overflow-hidden max-w-screen max-h-screen w-screen h-screen bg-stone-800 text-gray-900 grid place-items-center"
+  >
+    <form
+      action="/login"
+      method="POST"
+      class="max-w-xs bg-white rounded-lg border shadow overflow-hidden p-4 flex flex-col gap-3 w-full"
+    >
+      <input
+        type="text"
+        name="username"
+        class="border p-3 rounded"
+        placeholder="Username..."
+      />
+      <input
+        type="password"
+        name="password"
+        class="border p-3 rounded"
+        placeholder="Password..."
+      />
+      <div class="text-xs flex items-center justify-between">
+        <a href="/register">Create an account!</a>
+        <a href="/forgot-password">Forgot Your Password?</a>
+      </div>
+      <button class="bg-orange-400 rounded text-white p-3">Login</button>
+    </form>
+  </body>
+</html>

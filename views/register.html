@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – Todoable</title>
+
+    <script src="/static/tailwind.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Space Grotesk", monospace;
+      }
+    </style>
+  </head>
+  <body
+    class="overflow-hidden max-w-screen max-h-screen w-screen h-screen bg-stone-800 text-gray-900 grid place-items-center"
+  >
+    <form
+      id="form"
+      method="POST"
+      action="/register"
+      class="max-w-xs bg-white rounded-lg border shadow overflow-hidden p-4 flex flex-col gap-3 w-full"
+    >
+      <input
+        type="text"
+        name="username"
+        class="border p-3 rounded"
+        placeholder="Username..."
+      />
+      <input
+        type="password"
+        name="password"
+        class="border p-3 rounded"
+        placeholder="Password..."
+      />
+      <input
+        type="password"
+        name="confirm_password"
+        class="border p-3 rounded"
+        placeholder="Confirm Password..."
+      />
+      <div class="text-xs flex items-center justify-end">
+        <a href="/login">Already have an account!</a>
+      </div>
+      <button class="bg-orange-400 rounded text-white p-3">Register</button>
+    </form>
+
+    <script>
+      const form = document.querySelector("#form");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const password = document.querySelector("[name=password]").value;
+        const confirm_password = document.querySelector(
+          "[name=confirm_password]"
+        ).value;
+
+        if (password != confirm_password) {
+          alert("Passwords do not match!");
+        } else event.currentTarget.submit();
+      });
+    </script>
+  </body>
+</html>
